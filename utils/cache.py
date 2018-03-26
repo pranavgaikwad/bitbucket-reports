@@ -13,8 +13,24 @@ class Cache(object):
         pass
 
 
+'''
+Cache entry would look like this
+'repo' : {
+            user : <>
+            from : <>
+            to : <>
+            commits : <>
+         }, 
+         {
+            user : <>, 
+            from : <>, 
+            to : <>,
+            commits : <>
+         }
 
-class CommitCache(Cache):
+'''
+
+class UserStatCache(Cache):
     """ commits cache """
 
     def __init__(self):
