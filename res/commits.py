@@ -7,11 +7,15 @@ from utils.timeutils import TimeUtils
 from utils.requestutils import BitbucketRequests
 
 class Commits(GitClient):
+    """ all operations on commits """
+
     def __init__(self, repo):
         super(Commits, self).__init__(repo)
         self.users = Users()
 
     def commits(self, days="2018-03-12", branches=None):
+        ''' returns commits since specified days on given branches '''
+        ''' uses all branches if branches not specified '''
         since = TimeUtils().past(days=120)
         self._load_heads()
         counted_commits = []
@@ -36,7 +40,7 @@ class Commits(GitClient):
         return None
 
     def _load_heads(self):
-        ''' heads '''
+        ''' load all remote heads '''
         all_refs = self.repo.remotes.origin.refs
         for ref in all_refs:
             self.repo.create_head(ref.name, ref)
