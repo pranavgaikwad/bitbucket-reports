@@ -1,20 +1,45 @@
+import os 
+import pickle
+
 class Cache(object):
     """ generic object cache """
 
-    def __init__(self):
-        pass
+    def __init__(self, cache):
+        self.cache = cache
+        if os.path.exists(cache):
+            try:
+                self.load()
+            except IOError:
+                self._new()
+        else:
+            self._new()
 
-    def put(self):
-        ''' puts new document in cache '''
-        pass
+    def _new(self):
+        ''' creates new cache file '''
+        self.save({})
 
-    def get(self):
-        ''' returns a document from cache '''
-        pass
+    def load(self):
+        ''' loads cache into dict '''
+        try:
+            with open(self.cache, 'rb') as handle:
+                unserialized_data = pickle.load(handle)
+            return unserialized_data
+        except:
+            raise IOError("Corrupted cache.")
 
+    def save(self, d):
+        os.remove(self.cache)
+        try:
+            with open(self.cache, 'wb') as handle:
+                pickle.dump(d, handle, protocol=pickle.HIGHEST_PROTOCOL)
+            return
+        except:
+            raise IOError("Corrupted cache.")
 
 '''
-Cache entry would look like this
+Cache entry would look like this\ 
+:
+
 'repo' : {
             user : <>
             from : <>
@@ -33,10 +58,10 @@ Cache entry would look like this
 class UserStatCache(Cache):
     """ commits cache """
 
-    def __init__(self):
-        ''' '''
-        pass
+    DEFAULT = os.path.realpath(os.getcwd() + "/../") + '/.userstat.cache'
 
-    def put(self):
-        ''' '''
-        pass
+    def __init__(self, cache=None):
+        if cache is None:
+            cache = UserStatCache.DEFAULT
+        super(UserStatCache, self).__init__(cache=cache)
+

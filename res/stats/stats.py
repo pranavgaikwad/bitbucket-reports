@@ -1,3 +1,5 @@
+import json
+
 class Stats(object):
     """ All statistics """
 
@@ -14,6 +16,10 @@ class Stats(object):
         except:
             pass
         return stat
+
+    def json(self):
+        ''' returns stats as json '''
+        return json.loads(json.dumps(self.stats))
 
 class UserStats(Stats):
     """ User specific stats """
